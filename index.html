@@ -336,7 +336,7 @@
     </div>
 
     <script>
-      // === YOUR WEB APP URL (INSERTED) ===
+      // === YOUR WEB APP URL ===
       const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxNC1rAhX62hn-UbxAxVWjTAP4ho2vChmEctiJdHYRPsJhoTHWJNrgmi1z8HLUCr2wGBw/exec';
 
       // === DOM ELEMENTS ===
@@ -388,7 +388,7 @@
             const audioBlob = new Blob(audioChunks, { type: 'audio/webm' });
             const reader = new FileReader();
             reader.onload = function() {
-              window._audioData = reader.result; // base64 data URL
+              window._audioData = reader.result;
               audioStatus.textContent = '✓ Recording saved!';
               recordBtn.textContent = '🎙️ Record Again';
               recordBtn.classList.remove('recording');
@@ -435,12 +435,12 @@
           const userAgent = navigator.userAgent || 'Not available';
           const timestamp = new Date().toString();
 
-          // Build form data with text fields
-          const formData = new FormData();
-          formData.append('message', message);
-          formData.append('ip', ip);
-          formData.append('userAgent', userAgent);
-          formData.append('timestamp', timestamp);
+          // Build form data as URL-encoded string (not FormData)
+          const params = new URLSearchParams();
+          params.append('message', message);
+          params.append('ip', ip);
+          params.append('userAgent', userAgent);
+          params.append('timestamp', timestamp);
 
           // Handle image: convert to base64 data URL
           if (imageUpload.files.length > 0) {
@@ -451,19 +451,23 @@
               reader.onerror = reject;
               reader.readAsDataURL(file);
             });
-            formData.append('imageData', imageData);
+            params.append('imageData', imageData);
           }
 
           // Handle audio: use stored base64 data
           if (window._audioData) {
-            formData.append('audioData', window._audioData);
+            params.append('audioData', window._audioData);
           }
 
           statusDiv.textContent = '✧ Your message is ascending... ✧';
 
+          // Send as URL-encoded form data
           const response = await fetch(SCRIPT_URL, {
             method: 'POST',
-            body: formData
+            headers: {
+              'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            body: params.toString()
           });
 
           const result = await response.text();
