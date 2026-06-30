@@ -147,9 +147,11 @@
         border-radius: 30px;
         border: 1px solid rgba(255, 215, 0, 0.25);
         box-shadow: 0 0 80px rgba(138, 43, 226, 0.3);
-        max-width: 550px;
+        max-width: 600px;
         width: 90%;
         transition: transform 0.3s ease;
+        max-height: 90vh;
+        overflow-y: auto;
       }
       h1 {
         font-size: 2.8rem;
@@ -172,10 +174,11 @@
         color: #f0e6d0;
         font-family: 'Georgia', serif;
         resize: vertical;
-        min-height: 140px;
+        min-height: 100px;
         transition: all 0.3s ease;
         outline: none;
         box-sizing: border-box;
+        margin-bottom: 15px;
       }
       textarea::placeholder {
         color: rgba(255, 215, 0, 0.4);
@@ -186,8 +189,75 @@
         box-shadow: 0 0 30px rgba(255, 215, 0, 0.15);
         background: rgba(255, 255, 255, 0.08);
       }
-      button {
-        margin-top: 25px;
+      .file-input-wrapper {
+        margin: 15px 0;
+        text-align: left;
+      }
+      .file-input-wrapper label {
+        display: inline-block;
+        padding: 10px 20px;
+        background: rgba(255, 215, 0, 0.15);
+        border: 1px solid rgba(255, 215, 0, 0.3);
+        border-radius: 30px;
+        color: #f0e6d0;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        font-size: 0.95rem;
+      }
+      .file-input-wrapper label:hover {
+        background: rgba(255, 215, 0, 0.25);
+        border-color: #ffd700;
+      }
+      .file-input-wrapper input[type="file"] {
+        display: none;
+      }
+      #fileName {
+        display: inline-block;
+        margin-left: 15px;
+        color: rgba(255, 215, 0, 0.7);
+        font-size: 0.9rem;
+      }
+      .record-wrapper {
+        margin: 15px 0;
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        justify-content: center;
+      }
+      .record-btn {
+        padding: 12px 25px;
+        font-size: 1rem;
+        font-weight: bold;
+        background: #8b0000;
+        border: none;
+        border-radius: 30px;
+        color: white;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        font-family: 'Georgia', serif;
+        letter-spacing: 1px;
+      }
+      .record-btn:hover {
+        background: #a00000;
+        transform: scale(1.03);
+      }
+      .record-btn.recording {
+        background: #ff0000;
+        animation: pulse 1s infinite;
+      }
+      @keyframes pulse {
+        0% { transform: scale(1); }
+        50% { transform: scale(1.05); }
+        100% { transform: scale(1); }
+      }
+      #audioStatus {
+        color: rgba(255, 215, 0, 0.7);
+        font-size: 0.9rem;
+      }
+      .send-btn-wrapper {
+        margin-top: 20px;
+      }
+      button.send-btn {
         padding: 14px 50px;
         font-size: 1.3rem;
         font-weight: bold;
@@ -201,13 +271,15 @@
         letter-spacing: 3px;
         font-family: 'Georgia', serif;
       }
-      button:hover {
+      button.send-btn:hover {
         transform: scale(1.05);
         box-shadow: 0 0 70px rgba(255, 215, 0, 0.6);
         background: linear-gradient(145deg, #ffd700, #ffec8b);
       }
-      button:active {
-        transform: scale(0.95);
+      button.send-btn:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+        transform: none;
       }
       #status {
         margin-top: 20px;
@@ -220,7 +292,7 @@
       @media (max-width: 600px) {
         h1 { font-size: 1.8rem; }
         .container { padding: 30px 20px; }
-        textarea { min-height: 100px; }
+        textarea { min-height: 80px; }
       }
     </style>
   </head>
@@ -240,80 +312,182 @@
 
     <div class="container">
       <h1>✦ Send your message to GOD ✦</h1>
-      <textarea id="messageInput" placeholder="Type your prayer, thought, or message..."></textarea>
-      <button id="sendButton">✦ Send ✦</button>
+
+      <form id="messageForm" enctype="multipart/form-data">
+        <textarea id="messageInput" placeholder="Type your prayer, thought, or message..."></textarea>
+
+        <div class="file-input-wrapper">
+          <label for="imageUpload">📷 Choose Image</label>
+          <input type="file" id="imageUpload" accept="image/*">
+          <span id="fileName">No file chosen</span>
+        </div>
+
+        <div class="record-wrapper">
+          <button type="button" class="record-btn" id="recordBtn">🎙️ Record Voice</button>
+          <span id="audioStatus">Not recording</span>
+        </div>
+
+        <div class="send-btn-wrapper">
+          <button type="submit" class="send-btn" id="sendButton">✦ Send ✦</button>
+        </div>
+      </form>
+
       <div id="status"></div>
     </div>
 
     <script>
-      // NEW Web App URL (after redeployment)
-      const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxNC1rAhX62hn-UbxAxVWjTAP4ho2vChmEctiJdHYRPsJhoTHWJNrgmi1z8HLUCr2wGBw/exec';
+      // === CONFIGURATION ===
+      // IMPORTANT: Replace this URL with your actual Web App URL from Google Apps Script
+      const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxTAROm6iKESP__dSoGgvkogT4PLfdSH0Ovk9UzuUN_f5oArDkdaFjJhvVkMjQQOIPcgA/exec';
 
-      // Function to get the user's IP address using ipify.org
-      function getIPAddress() {
-        return fetch('https://api.ipify.org?format=json')
-          .then(response => response.json())
-          .then(data => data.ip)
-          .catch(() => 'Not available');
-      }
+      // === DOM ELEMENTS ===
+      const form = document.getElementById('messageForm');
+      const messageInput = document.getElementById('messageInput');
+      const imageUpload = document.getElementById('imageUpload');
+      const fileName = document.getElementById('fileName');
+      const recordBtn = document.getElementById('recordBtn');
+      const audioStatus = document.getElementById('audioStatus');
+      const sendBtn = document.getElementById('sendButton');
+      const statusDiv = document.getElementById('status');
 
-      document.getElementById('sendButton').addEventListener('click', function() {
-        const message = document.getElementById('messageInput').value;
-        const statusDiv = document.getElementById('status');
-        
-        if (!message || message.trim() === '') {
+      // === FILE INPUT HANDLER ===
+      imageUpload.addEventListener('change', function() {
+        if (this.files.length > 0) {
+          fileName.textContent = this.files[0].name;
+        } else {
+          fileName.textContent = 'No file chosen';
+        }
+      });
+
+      // === VOICE RECORDER ===
+      let mediaRecorder = null;
+      let audioChunks = [];
+      let isRecording = false;
+
+      recordBtn.addEventListener('click', async function() {
+        if (isRecording) {
+          // Stop recording
+          if (mediaRecorder && mediaRecorder.state === 'recording') {
+            mediaRecorder.stop();
+          }
+          isRecording = false;
+          this.classList.remove('recording');
+          this.textContent = '🎙️ Record Voice';
+          audioStatus.textContent = 'Processing...';
+          return;
+        }
+
+        // Start recording
+        try {
+          const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+          mediaRecorder = new MediaRecorder(stream);
+          audioChunks = [];
+
+          mediaRecorder.ondataavailable = function(event) {
+            audioChunks.push(event.data);
+          };
+
+          mediaRecorder.onstop = function() {
+            const audioBlob = new Blob(audioChunks, { type: 'audio/webm' });
+            const audioFile = new File([audioBlob], 'voice_recording.webm', { type: 'audio/webm' });
+            // Attach to form data later
+            window._audioFile = audioFile;
+            audioStatus.textContent = '✓ Recording saved!';
+            recordBtn.textContent = '🎙️ Record Again';
+            recordBtn.classList.remove('recording');
+            isRecording = false;
+            // Stop all tracks
+            stream.getTracks().forEach(track => track.stop());
+          };
+
+          mediaRecorder.start();
+          isRecording = true;
+          this.classList.add('recording');
+          this.textContent = '⏹️ Stop Recording';
+          audioStatus.textContent = 'Recording... Speak now';
+          window._audioFile = null;
+
+        } catch (err) {
+          audioStatus.textContent = '❌ Microphone access denied. Please allow and try again.';
+          console.error('Recording error:', err);
+        }
+      });
+
+      // === FORM SUBMIT HANDLER ===
+      form.addEventListener('submit', async function(e) {
+        e.preventDefault();
+
+        const message = messageInput.value.trim();
+        if (!message) {
           statusDiv.style.color = '#ff6b6b';
           statusDiv.textContent = '✧ Please write a message first. ✧';
           return;
         }
 
-        const btn = this;
-        btn.disabled = true;
-        btn.textContent = 'Sending...';
+        // Disable send button
+        sendBtn.disabled = true;
+        sendBtn.textContent = 'Sending...';
         statusDiv.style.color = '#ffd700';
-        statusDiv.textContent = '✧ Gathering information... ✧';
+        statusDiv.textContent = '✧ Preparing your message... ✧';
 
-        // Get IP address first, then send everything
-        getIPAddress().then(function(ip) {
+        try {
+          // Get IP address
+          const ipResponse = await fetch('https://api.ipify.org?format=json');
+          const ipData = await ipResponse.json();
+          const ip = ipData.ip || 'Not available';
+
           const userAgent = navigator.userAgent || 'Not available';
           const timestamp = new Date().toString();
 
-          // Prepare the data to send
-          const formData = new URLSearchParams();
+          // Build FormData
+          const formData = new FormData();
           formData.append('message', message);
           formData.append('ip', ip);
           formData.append('userAgent', userAgent);
           formData.append('timestamp', timestamp);
 
+          // Add image if selected
+          if (imageUpload.files.length > 0) {
+            formData.append('image', imageUpload.files[0]);
+          }
+
+          // Add audio if recorded
+          if (window._audioFile) {
+            formData.append('audio', window._audioFile);
+          }
+
           statusDiv.textContent = '✧ Your message is ascending... ✧';
 
-          return fetch(SCRIPT_URL, {
+          // Send to Google Apps Script
+          const response = await fetch(SCRIPT_URL, {
             method: 'POST',
-            headers: {
-              'Content-Type': 'application/x-www-form-urlencoded',
-            },
-            body: formData.toString()
+            body: formData
           });
-        })
-        .then(response => response.text())
-        .then(result => {
+
+          const result = await response.text();
+
           if (result.includes('Success')) {
             statusDiv.style.color = '#7bed9f';
             statusDiv.textContent = '✓ ' + result;
-            document.getElementById('messageInput').value = '';
+            messageInput.value = '';
+            imageUpload.value = '';
+            fileName.textContent = 'No file chosen';
+            window._audioFile = null;
+            audioStatus.textContent = 'Not recording';
+            recordBtn.textContent = '🎙️ Record Voice';
+            recordBtn.classList.remove('recording');
           } else {
             statusDiv.style.color = '#ff6b6b';
             statusDiv.textContent = '✧ ' + result;
           }
-          btn.disabled = false;
-          btn.textContent = '✦ Send ✦';
-        })
-        .catch(error => {
+
+        } catch (error) {
           statusDiv.style.color = '#ff6b6b';
           statusDiv.textContent = '✧ Error: ' + error.message + '. Please try again. ✧';
-          btn.disabled = false;
-          btn.textContent = '✦ Send ✦';
-        });
+        }
+
+        sendBtn.disabled = false;
+        sendBtn.textContent = '✦ Send ✦';
       });
     </script>
 
