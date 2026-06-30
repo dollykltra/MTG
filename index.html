@@ -6,308 +6,113 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Send your message to GOD</title>
     <style>
-      * {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-      }
+      * { margin: 0; padding: 0; box-sizing: border-box; }
       body {
-        height: 100vh;
-        width: 100vw;
-        overflow: hidden;
+        min-height: 100vh;
         display: flex;
         align-items: center;
         justify-content: center;
         background: #0a0514;
-        font-family: 'Georgia', 'Times New Roman', serif;
-        margin: 0;
-      }
-      .sky {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: radial-gradient(ellipse at 20% 50%, #1a0a30 0%, #0a0514 70%);
-        z-index: 0;
-        overflow: hidden;
-      }
-      .nebula {
-        position: absolute;
-        border-radius: 50%;
-        filter: blur(70px);
-        opacity: 0.4;
-        animation: nebulaFloat 20s infinite alternate ease-in-out;
-      }
-      .nebula-1 {
-        width: 600px;
-        height: 400px;
-        background: #8a2be2;
-        top: 10%;
-        left: -10%;
-        animation-duration: 25s;
-      }
-      .nebula-2 {
-        width: 500px;
-        height: 500px;
-        background: #da70d6;
-        bottom: 10%;
-        right: -10%;
-        animation-duration: 30s;
-        animation-delay: 5s;
-      }
-      .nebula-3 {
-        width: 400px;
-        height: 300px;
-        background: #4b0082;
-        top: 50%;
-        left: 40%;
-        animation-duration: 20s;
-        animation-delay: 10s;
-        opacity: 0.3;
-      }
-      @keyframes nebulaFloat {
-        0% { transform: translate(0, 0) scale(1); }
-        100% { transform: translate(80px, -60px) scale(1.2); }
-      }
-      .stars {
-        position: absolute;
-        width: 2px;
-        height: 2px;
-        background: white;
-        border-radius: 50%;
-        box-shadow: 
-          100px 120px 0 0 white, 340px 60px 0 0 white, 600px 200px 0 0 white, 
-          800px 80px 0 0 white, 1200px 150px 0 0 white, 50px 400px 0 0 white,
-          300px 500px 0 0 white, 700px 600px 0 0 white, 1100px 400px 0 0 white,
-          1300px 700px 0 0 white, 200px 800px 0 0 white, 900px 900px 0 0 white,
-          1400px 300px 0 0 white, 1500px 600px 0 0 white, 500px 100px 0 0 white;
-        animation: twinkle 4s infinite alternate;
-        z-index: 1;
-      }
-      .stars::after {
-        content: '';
-        position: absolute;
-        width: 100%;
-        height: 100%;
-        background: white;
-        border-radius: 50%;
-        box-shadow: 
-          150px 250px 0 0 white, 450px 350px 0 0 white, 850px 500px 0 0 white,
-          1050px 200px 0 0 white, 1250px 550px 0 0 white, 50px 650px 0 0 white,
-          550px 750px 0 0 white, 950px 850px 0 0 white, 1350px 950px 0 0 white;
-        animation: twinkle 3s infinite alternate-reverse;
-      }
-      @keyframes twinkle {
-        0% { opacity: 0.2; }
-        100% { opacity: 1; }
-      }
-      .solar-system {
-        position: absolute;
-        width: 100%;
-        height: 100%;
-        z-index: 1;
-        pointer-events: none;
-      }
-      .orbit {
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        border: 1px solid rgba(255, 215, 0, 0.15);
-        border-radius: 50%;
-        transform: translate(-50%, -50%);
-        animation: spin 30s linear infinite;
-      }
-      .orbit-1 { width: 250px; height: 250px; animation-duration: 20s; }
-      .orbit-2 { width: 400px; height: 400px; animation-duration: 35s; animation-direction: reverse; }
-      .orbit-3 { width: 580px; height: 580px; animation-duration: 50s; }
-      .planet {
-        position: absolute;
-        border-radius: 50%;
-        top: -10px;
-        left: 50%;
-        transform: translateX(-50%);
-        box-shadow: 0 0 30px rgba(255, 215, 0, 0.3);
-      }
-      .planet-1 { width: 18px; height: 18px; background: #ffd700; }
-      .planet-2 { width: 28px; height: 28px; background: #ff8c00; box-shadow: 0 0 50px rgba(255, 140, 0, 0.5); }
-      .planet-3 { width: 40px; height: 40px; background: #b8860b; box-shadow: 0 0 60px rgba(184, 134, 11, 0.4); }
-      @keyframes spin {
-        0% { transform: translate(-50%, -50%) rotate(0deg); }
-        100% { transform: translate(-50%, -50%) rotate(360deg); }
+        font-family: 'Georgia', serif;
+        padding: 20px;
       }
       .container {
-        position: relative;
-        z-index: 10;
+        max-width: 500px;
+        width: 100%;
+        padding: 40px;
+        background: rgba(255,255,255,0.05);
+        border-radius: 20px;
+        border: 1px solid rgba(255,215,0,0.2);
+        box-shadow: 0 0 60px rgba(138,43,226,0.2);
         text-align: center;
-        padding: 40px 50px;
-        background: rgba(10, 5, 20, 0.55);
-        backdrop-filter: blur(12px);
-        -webkit-backdrop-filter: blur(12px);
-        border-radius: 30px;
-        border: 1px solid rgba(255, 215, 0, 0.25);
-        box-shadow: 0 0 80px rgba(138, 43, 226, 0.3);
-        max-width: 600px;
-        width: 90%;
-        transition: transform 0.3s ease;
-        max-height: 90vh;
-        overflow-y: auto;
       }
       h1 {
-        font-size: 2.8rem;
-        font-weight: bold;
-        background: linear-gradient(135deg, #f3e7c9, #ffd700, #f3e7c9);
-        -webkit-background-clip: text;
-        background-clip: text;
-        color: transparent;
-        text-shadow: 0 0 40px rgba(255, 215, 0, 0.3), 0 0 80px rgba(138, 43, 226, 0.2);
-        margin-bottom: 30px;
-        letter-spacing: 4px;
+        font-size: 2.2rem;
+        color: #ffd700;
+        margin-bottom: 25px;
+        text-shadow: 0 0 30px rgba(255,215,0,0.2);
       }
       textarea {
         width: 100%;
-        padding: 18px 20px;
-        font-size: 1.1rem;
-        background: rgba(255, 255, 255, 0.05);
-        border: 1px solid rgba(255, 215, 0, 0.25);
-        border-radius: 16px;
-        color: #f0e6d0;
+        padding: 15px;
+        background: rgba(255,255,255,0.05);
+        border: 1px solid rgba(255,215,0,0.2);
+        border-radius: 12px;
+        color: #fff;
+        font-size: 1rem;
         font-family: 'Georgia', serif;
         resize: vertical;
         min-height: 100px;
-        transition: all 0.3s ease;
         outline: none;
-        box-sizing: border-box;
         margin-bottom: 15px;
       }
-      textarea::placeholder {
-        color: rgba(255, 215, 0, 0.4);
-        font-style: italic;
-      }
-      textarea:focus {
-        border-color: #ffd700;
-        box-shadow: 0 0 30px rgba(255, 215, 0, 0.15);
-        background: rgba(255, 255, 255, 0.08);
-      }
-      .file-input-wrapper {
-        margin: 15px 0;
-        text-align: left;
-      }
-      .file-input-wrapper label {
-        display: inline-block;
-        padding: 10px 20px;
-        background: rgba(255, 215, 0, 0.15);
-        border: 1px solid rgba(255, 215, 0, 0.3);
-        border-radius: 30px;
-        color: #f0e6d0;
-        cursor: pointer;
-        transition: all 0.3s ease;
-        font-size: 0.95rem;
-      }
-      .file-input-wrapper label:hover {
-        background: rgba(255, 215, 0, 0.25);
-        border-color: #ffd700;
-      }
-      .file-input-wrapper input[type="file"] {
-        display: none;
-      }
-      #fileName {
-        display: inline-block;
-        margin-left: 15px;
-        color: rgba(255, 215, 0, 0.7);
-        font-size: 0.9rem;
-      }
-      .record-wrapper {
-        margin: 15px 0;
+      textarea::placeholder { color: rgba(255,215,0,0.4); }
+      .btn-group {
         display: flex;
-        align-items: center;
-        gap: 15px;
+        flex-wrap: wrap;
+        gap: 10px;
         justify-content: center;
+        margin: 15px 0;
       }
-      .record-btn {
-        padding: 12px 25px;
-        font-size: 1rem;
-        font-weight: bold;
-        background: #8b0000;
+      .btn {
+        padding: 10px 20px;
         border: none;
         border-radius: 30px;
-        color: white;
+        font-size: 0.95rem;
         cursor: pointer;
-        transition: all 0.3s ease;
+        transition: all 0.3s;
         font-family: 'Georgia', serif;
-        letter-spacing: 1px;
       }
-      .record-btn:hover {
-        background: #a00000;
-        transform: scale(1.03);
+      .btn-image {
+        background: rgba(255,215,0,0.15);
+        color: #ffd700;
+        border: 1px solid rgba(255,215,0,0.3);
       }
-      .record-btn.recording {
+      .btn-image:hover { background: rgba(255,215,0,0.25); }
+      .btn-record {
+        background: #8b0000;
+        color: white;
+      }
+      .btn-record:hover { background: #a00000; }
+      .btn-record.recording {
         background: #ff0000;
         animation: pulse 1s infinite;
       }
       @keyframes pulse {
-        0% { transform: scale(1); }
+        0%, 100% { transform: scale(1); }
         50% { transform: scale(1.05); }
-        100% { transform: scale(1); }
       }
-      #audioStatus {
-        color: rgba(255, 215, 0, 0.7);
-        font-size: 0.9rem;
-      }
-      .send-btn-wrapper {
-        margin-top: 20px;
-      }
-      button.send-btn {
-        padding: 14px 50px;
-        font-size: 1.3rem;
-        font-weight: bold;
+      .btn-send {
+        width: 100%;
+        padding: 14px;
+        font-size: 1.2rem;
         background: linear-gradient(145deg, #b8860b, #ffd700);
+        color: #0a0514;
+        font-weight: bold;
         border: none;
         border-radius: 50px;
-        color: #0a0514;
         cursor: pointer;
-        transition: all 0.3s ease;
-        box-shadow: 0 0 40px rgba(255, 215, 0, 0.3);
-        letter-spacing: 3px;
+        transition: all 0.3s;
+        margin-top: 10px;
         font-family: 'Georgia', serif;
-        margin-top: 15px;
-        width: 100%;
       }
-      button.send-btn:hover {
-        transform: scale(1.02);
-        box-shadow: 0 0 70px rgba(255, 215, 0, 0.6);
-      }
-      button.send-btn:disabled {
-        opacity: 0.6;
-        cursor: not-allowed;
-        transform: none;
-      }
+      .btn-send:hover { transform: scale(1.02); box-shadow: 0 0 40px rgba(255,215,0,0.3); }
+      .btn-send:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
       #status {
-        margin-top: 20px;
-        font-size: 1.1rem;
+        margin-top: 15px;
         color: #f0e6d0;
-        min-height: 30px;
+        min-height: 25px;
       }
-      @media (max-width: 600px) {
-        h1 { font-size: 1.8rem; }
-        .container { padding: 30px 20px; }
-        textarea { min-height: 80px; }
+      #fileName, #audioStatus {
+        font-size: 0.85rem;
+        color: rgba(255,215,0,0.6);
+        margin-left: 10px;
       }
+      .file-input-wrapper { display: flex; align-items: center; justify-content: center; gap: 10px; flex-wrap: wrap; }
+      .file-input-wrapper input[type="file"] { display: none; }
     </style>
   </head>
   <body>
-
-    <div class="sky">
-      <div class="nebula nebula-1"></div>
-      <div class="nebula nebula-2"></div>
-      <div class="nebula nebula-3"></div>
-      <div class="stars"></div>
-      <div class="solar-system">
-        <div class="orbit orbit-1"><div class="planet planet-1"></div></div>
-        <div class="orbit orbit-2"><div class="planet planet-2"></div></div>
-        <div class="orbit orbit-3"><div class="planet planet-3"></div></div>
-      </div>
-    </div>
 
     <div class="container">
       <h1>✦ Send your message to GOD ✦</h1>
@@ -316,19 +121,17 @@
         <textarea id="messageInput" placeholder="Type your prayer, thought, or message..."></textarea>
 
         <div class="file-input-wrapper">
-          <label for="imageUpload">📷 Choose Image</label>
+          <label for="imageUpload" class="btn btn-image">📷 Choose Image</label>
           <input type="file" id="imageUpload" accept="image/*">
           <span id="fileName">No file chosen</span>
         </div>
 
-        <div class="record-wrapper">
-          <button type="button" class="record-btn" id="recordBtn">🎙️ Record Voice</button>
+        <div style="margin:15px 0; display:flex; align-items:center; justify-content:center; gap:10px; flex-wrap:wrap;">
+          <button type="button" class="btn btn-record" id="recordBtn">🎙️ Record Voice</button>
           <span id="audioStatus">Not recording</span>
         </div>
 
-        <div class="send-btn-wrapper">
-          <button type="submit" class="send-btn" id="sendButton">✦ Send ✦</button>
-        </div>
+        <button type="submit" class="btn-send" id="sendButton">✦ Send ✦</button>
       </form>
 
       <div id="status"></div>
@@ -349,12 +152,10 @@
       var isRecording = false;
       var audioData = null;
 
-      // File input handler
       imageUpload.addEventListener('change', function() {
         fileName.textContent = this.files.length > 0 ? this.files[0].name : 'No file chosen';
       });
 
-      // Voice recorder
       recordBtn.addEventListener('click', async function() {
         if (isRecording) {
           if (mediaRecorder && mediaRecorder.state === 'recording') {
@@ -398,11 +199,10 @@
 
         } catch (err) {
           audioStatus.textContent = '❌ Microphone access denied. Please allow and try again.';
-          console.error('Recording error:', err);
+          console.error(err);
         }
       });
 
-      // Form submit handler
       form.addEventListener('submit', function(e) {
         e.preventDefault();
 
@@ -416,13 +216,12 @@
         sendBtn.disabled = true;
         sendBtn.textContent = 'Sending...';
         statusDiv.style.color = '#ffd700';
-        statusDiv.textContent = '✧ Preparing your message... ✧';
+        statusDiv.textContent = '✧ Preparing... ✧';
 
-        // Get IP address
         fetch('https://api.ipify.org?format=json')
-          .then(function(response) { return response.json(); })
-          .then(function(ipData) {
-            var ip = ipData.ip || 'Not available';
+          .then(function(res) { return res.json(); })
+          .then(function(data) {
+            var ip = data.ip || 'Not available';
             var userAgent = navigator.userAgent || 'Not available';
             var timestamp = new Date().toString();
 
@@ -438,15 +237,14 @@
               sendToBackend(message, ip, userAgent, timestamp, null, audioData);
             }
           })
-          .catch(function(error) {
+          .catch(function(err) {
             statusDiv.style.color = '#ff6b6b';
-            statusDiv.textContent = '✧ Error fetching IP: ' + error.message;
+            statusDiv.textContent = '✧ IP fetch error: ' + err.message;
             sendBtn.disabled = false;
             sendBtn.textContent = '✦ Send ✦';
           });
       });
 
-      // Function to send data to backend
       function sendToBackend(message, ip, userAgent, timestamp, imageData, audioData) {
         statusDiv.textContent = '✧ Your message is ascending... ✧';
 
@@ -469,9 +267,9 @@
             sendBtn.disabled = false;
             sendBtn.textContent = '✦ Send ✦';
           })
-          .withFailureHandler(function(error) {
+          .withFailureHandler(function(err) {
             statusDiv.style.color = '#ff6b6b';
-            statusDiv.textContent = '✧ Error: ' + error.message;
+            statusDiv.textContent = '✧ Error: ' + err.message;
             sendBtn.disabled = false;
             sendBtn.textContent = '✦ Send ✦';
           })
