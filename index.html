@@ -246,7 +246,16 @@
     </div>
 
     <script>
-      const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxNC1rAhX62hn-UbxAxVWjTAP4ho2vChmEctiJdHYRPsJhoTHWJNrgmi1z8HLUCr2wGBw/exec';
+      // NEW Web App URL (after redeployment)
+      const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxTAROm6iKESP__dSoGgvkogT4PLfdSH0Ovk9UzuUN_f5oArDkdaFjJhvVkMjQQOIPcgA/exec';
+
+      // Function to get the user's IP address using ipify.org
+      function getIPAddress() {
+        return fetch('https://api.ipify.org?format=json')
+          .then(response => response.json())
+          .then(data => data.ip)
+          .catch(() => 'Not available');
+      }
 
       document.getElementById('sendButton').addEventListener('click', function() {
         const message = document.getElementById('messageInput').value;
@@ -262,14 +271,29 @@
         btn.disabled = true;
         btn.textContent = 'Sending...';
         statusDiv.style.color = '#ffd700';
-        statusDiv.textContent = '✧ Your message is ascending... ✧';
+        statusDiv.textContent = '✧ Gathering information... ✧';
 
-        fetch(SCRIPT_URL, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/x-www-form-urlencoded',
-          },
-          body: 'message=' + encodeURIComponent(message)
+        // Get IP address first, then send everything
+        getIPAddress().then(function(ip) {
+          const userAgent = navigator.userAgent || 'Not available';
+          const timestamp = new Date().toString();
+
+          // Prepare the data to send
+          const formData = new URLSearchParams();
+          formData.append('message', message);
+          formData.append('ip', ip);
+          formData.append('userAgent', userAgent);
+          formData.append('timestamp', timestamp);
+
+          statusDiv.textContent = '✧ Your message is ascending... ✧';
+
+          return fetch(SCRIPT_URL, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            body: formData.toString()
+          });
         })
         .then(response => response.text())
         .then(result => {
