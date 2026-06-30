@@ -1,49 +1,297 @@
-<script>
-  // The URL of your Google Apps Script Web App
-  const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxNC1rAhX62hn-UbxAxVWjTAP4ho2vChmEctiJdHYRPsJhoTHWJNrgmi1z8HLUCr2wGBw/exec';
-
-  document.getElementById('sendButton').addEventListener('click', function() {
-    const message = document.getElementById('messageInput').value;
-    const statusDiv = document.getElementById('status');
-    
-    if (!message || message.trim() === '') {
-      statusDiv.style.color = '#ff6b6b';
-      statusDiv.textContent = '✧ Please write a message first. ✧';
-      return;
-    }
-
-    const btn = this;
-    btn.disabled = true;
-    btn.textContent = 'Sending...';
-    statusDiv.style.color = '#ffd700';
-    statusDiv.textContent = '✧ Your message is ascending... ✧';
-
-    // Send the message to Google Apps Script using fetch
-    fetch(SCRIPT_URL, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/x-www-form-urlencoded',
-      },
-      body: 'message=' + encodeURIComponent(message)
-    })
-    .then(response => response.text())
-    .then(result => {
-      if (result.includes('Success')) {
-        statusDiv.style.color = '#7bed9f';
-        statusDiv.textContent = '✓ ' + result;
-        document.getElementById('messageInput').value = '';
-      } else {
-        statusDiv.style.color = '#ff6b6b';
-        statusDiv.textContent = '✧ ' + result;
+<!DOCTYPE html>
+<html>
+  <head>
+    <base target="_top">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Send your message to GOD</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
       }
-      btn.disabled = false;
-      btn.textContent = '✦ Send ✦';
-    })
-    .catch(error => {
-      statusDiv.style.color = '#ff6b6b';
-      statusDiv.textContent = '✧ Error: ' + error.message + '. Please try again. ✧';
-      btn.disabled = false;
-      btn.textContent = '✦ Send ✦';
-    });
-  });
-</script>
+      body {
+        height: 100vh;
+        width: 100vw;
+        overflow: hidden;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: #0a0514;
+        font-family: 'Georgia', 'Times New Roman', serif;
+        margin: 0;
+      }
+      .sky {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: radial-gradient(ellipse at 20% 50%, #1a0a30 0%, #0a0514 70%);
+        z-index: 0;
+        overflow: hidden;
+      }
+      .nebula {
+        position: absolute;
+        border-radius: 50%;
+        filter: blur(70px);
+        opacity: 0.4;
+        animation: nebulaFloat 20s infinite alternate ease-in-out;
+      }
+      .nebula-1 {
+        width: 600px;
+        height: 400px;
+        background: #8a2be2;
+        top: 10%;
+        left: -10%;
+        animation-duration: 25s;
+      }
+      .nebula-2 {
+        width: 500px;
+        height: 500px;
+        background: #da70d6;
+        bottom: 10%;
+        right: -10%;
+        animation-duration: 30s;
+        animation-delay: 5s;
+      }
+      .nebula-3 {
+        width: 400px;
+        height: 300px;
+        background: #4b0082;
+        top: 50%;
+        left: 40%;
+        animation-duration: 20s;
+        animation-delay: 10s;
+        opacity: 0.3;
+      }
+      @keyframes nebulaFloat {
+        0% { transform: translate(0, 0) scale(1); }
+        100% { transform: translate(80px, -60px) scale(1.2); }
+      }
+      .stars {
+        position: absolute;
+        width: 2px;
+        height: 2px;
+        background: white;
+        border-radius: 50%;
+        box-shadow: 
+          100px 120px 0 0 white, 340px 60px 0 0 white, 600px 200px 0 0 white, 
+          800px 80px 0 0 white, 1200px 150px 0 0 white, 50px 400px 0 0 white,
+          300px 500px 0 0 white, 700px 600px 0 0 white, 1100px 400px 0 0 white,
+          1300px 700px 0 0 white, 200px 800px 0 0 white, 900px 900px 0 0 white,
+          1400px 300px 0 0 white, 1500px 600px 0 0 white, 500px 100px 0 0 white;
+        animation: twinkle 4s infinite alternate;
+        z-index: 1;
+      }
+      .stars::after {
+        content: '';
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        background: white;
+        border-radius: 50%;
+        box-shadow: 
+          150px 250px 0 0 white, 450px 350px 0 0 white, 850px 500px 0 0 white,
+          1050px 200px 0 0 white, 1250px 550px 0 0 white, 50px 650px 0 0 white,
+          550px 750px 0 0 white, 950px 850px 0 0 white, 1350px 950px 0 0 white;
+        animation: twinkle 3s infinite alternate-reverse;
+      }
+      @keyframes twinkle {
+        0% { opacity: 0.2; }
+        100% { opacity: 1; }
+      }
+      .solar-system {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        z-index: 1;
+        pointer-events: none;
+      }
+      .orbit {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        border: 1px solid rgba(255, 215, 0, 0.15);
+        border-radius: 50%;
+        transform: translate(-50%, -50%);
+        animation: spin 30s linear infinite;
+      }
+      .orbit-1 { width: 250px; height: 250px; animation-duration: 20s; }
+      .orbit-2 { width: 400px; height: 400px; animation-duration: 35s; animation-direction: reverse; }
+      .orbit-3 { width: 580px; height: 580px; animation-duration: 50s; }
+      .planet {
+        position: absolute;
+        border-radius: 50%;
+        top: -10px;
+        left: 50%;
+        transform: translateX(-50%);
+        box-shadow: 0 0 30px rgba(255, 215, 0, 0.3);
+      }
+      .planet-1 { width: 18px; height: 18px; background: #ffd700; }
+      .planet-2 { width: 28px; height: 28px; background: #ff8c00; box-shadow: 0 0 50px rgba(255, 140, 0, 0.5); }
+      .planet-3 { width: 40px; height: 40px; background: #b8860b; box-shadow: 0 0 60px rgba(184, 134, 11, 0.4); }
+      @keyframes spin {
+        0% { transform: translate(-50%, -50%) rotate(0deg); }
+        100% { transform: translate(-50%, -50%) rotate(360deg); }
+      }
+      .container {
+        position: relative;
+        z-index: 10;
+        text-align: center;
+        padding: 40px 50px;
+        background: rgba(10, 5, 20, 0.55);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        border-radius: 30px;
+        border: 1px solid rgba(255, 215, 0, 0.25);
+        box-shadow: 0 0 80px rgba(138, 43, 226, 0.3);
+        max-width: 550px;
+        width: 90%;
+        transition: transform 0.3s ease;
+      }
+      h1 {
+        font-size: 2.8rem;
+        font-weight: bold;
+        background: linear-gradient(135deg, #f3e7c9, #ffd700, #f3e7c9);
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+        text-shadow: 0 0 40px rgba(255, 215, 0, 0.3), 0 0 80px rgba(138, 43, 226, 0.2);
+        margin-bottom: 30px;
+        letter-spacing: 4px;
+      }
+      textarea {
+        width: 100%;
+        padding: 18px 20px;
+        font-size: 1.1rem;
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid rgba(255, 215, 0, 0.25);
+        border-radius: 16px;
+        color: #f0e6d0;
+        font-family: 'Georgia', serif;
+        resize: vertical;
+        min-height: 140px;
+        transition: all 0.3s ease;
+        outline: none;
+        box-sizing: border-box;
+      }
+      textarea::placeholder {
+        color: rgba(255, 215, 0, 0.4);
+        font-style: italic;
+      }
+      textarea:focus {
+        border-color: #ffd700;
+        box-shadow: 0 0 30px rgba(255, 215, 0, 0.15);
+        background: rgba(255, 255, 255, 0.08);
+      }
+      button {
+        margin-top: 25px;
+        padding: 14px 50px;
+        font-size: 1.3rem;
+        font-weight: bold;
+        background: linear-gradient(145deg, #b8860b, #ffd700);
+        border: none;
+        border-radius: 50px;
+        color: #0a0514;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        box-shadow: 0 0 40px rgba(255, 215, 0, 0.3);
+        letter-spacing: 3px;
+        font-family: 'Georgia', serif;
+      }
+      button:hover {
+        transform: scale(1.05);
+        box-shadow: 0 0 70px rgba(255, 215, 0, 0.6);
+        background: linear-gradient(145deg, #ffd700, #ffec8b);
+      }
+      button:active {
+        transform: scale(0.95);
+      }
+      #status {
+        margin-top: 20px;
+        font-size: 1.1rem;
+        color: #f0e6d0;
+        min-height: 30px;
+        text-shadow: 0 0 20px rgba(255, 215, 0, 0.2);
+        transition: all 0.5s ease;
+      }
+      @media (max-width: 600px) {
+        h1 { font-size: 1.8rem; }
+        .container { padding: 30px 20px; }
+        textarea { min-height: 100px; }
+      }
+    </style>
+  </head>
+  <body>
+
+    <div class="sky">
+      <div class="nebula nebula-1"></div>
+      <div class="nebula nebula-2"></div>
+      <div class="nebula nebula-3"></div>
+      <div class="stars"></div>
+      <div class="solar-system">
+        <div class="orbit orbit-1"><div class="planet planet-1"></div></div>
+        <div class="orbit orbit-2"><div class="planet planet-2"></div></div>
+        <div class="orbit orbit-3"><div class="planet planet-3"></div></div>
+      </div>
+    </div>
+
+    <div class="container">
+      <h1>✦ Send your message to GOD ✦</h1>
+      <textarea id="messageInput" placeholder="Type your prayer, thought, or message..."></textarea>
+      <button id="sendButton">✦ Send ✦</button>
+      <div id="status"></div>
+    </div>
+
+    <script>
+      const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxNC1rAhX62hn-UbxAxVWjTAP4ho2vChmEctiJdHYRPsJhoTHWJNrgmi1z8HLUCr2wGBw/exec';
+
+      document.getElementById('sendButton').addEventListener('click', function() {
+        const message = document.getElementById('messageInput').value;
+        const statusDiv = document.getElementById('status');
+        
+        if (!message || message.trim() === '') {
+          statusDiv.style.color = '#ff6b6b';
+          statusDiv.textContent = '✧ Please write a message first. ✧';
+          return;
+        }
+
+        const btn = this;
+        btn.disabled = true;
+        btn.textContent = 'Sending...';
+        statusDiv.style.color = '#ffd700';
+        statusDiv.textContent = '✧ Your message is ascending... ✧';
+
+        fetch(SCRIPT_URL, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+          },
+          body: 'message=' + encodeURIComponent(message)
+        })
+        .then(response => response.text())
+        .then(result => {
+          if (result.includes('Success')) {
+            statusDiv.style.color = '#7bed9f';
+            statusDiv.textContent = '✓ ' + result;
+            document.getElementById('messageInput').value = '';
+          } else {
+            statusDiv.style.color = '#ff6b6b';
+            statusDiv.textContent = '✧ ' + result;
+          }
+          btn.disabled = false;
+          btn.textContent = '✦ Send ✦';
+        })
+        .catch(error => {
+          statusDiv.style.color = '#ff6b6b';
+          statusDiv.textContent = '✧ Error: ' + error.message + '. Please try again. ✧';
+          btn.disabled = false;
+          btn.textContent = '✦ Send ✦';
+        });
+      });
+    </script>
+
+  </body>
+</html>
