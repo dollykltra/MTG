@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<body>
+  <h1>Test Backend</h1>
+  <textarea id="msg" placeholder="Type message"></textarea>
+  <button onclick="send()">Send</button>
+  <div id="result"></div>
+
+  <script>
+    const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxNC1rAhX62hn-UbxAxVWjTAP4ho2vChmEctiJdHYRPsJhoTHWJNrgmi1z8HLUCr2wGBw/exec';
+
+    async function send() {
+      const msg = document.getElementById('msg').value;
+      if (!msg) return;
+      const formData = new FormData();
+      formData.append('message', msg);
+      formData.append('ip', 'Test');
+      formData.append('userAgent', 'Test');
+      formData.append('timestamp', new Date().toString());
+
+      try {
+        const res = await fetch(SCRIPT_URL, { method: 'POST', body: formData });
+        const text = await res.text();
+        document.getElementById('result').textContent = text;
+      } catch(e) {
+        document.getElementById('result').textContent = 'Error: ' + e.message;
+      }
+    }
+  </script>
+</body>
+</html>
