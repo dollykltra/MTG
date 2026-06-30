@@ -1,302 +1,608 @@
 <!DOCTYPE html>
-<html>
-  <head>
-    <base target="_top">
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Send your message to GOD</title>
-    <style>
-      * { margin: 0; padding: 0; box-sizing: border-box; }
-      body {
-        min-height: 100vh;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        background: #0a0514;
-        font-family: 'Georgia', serif;
-        padding: 20px;
-      }
-      .container {
-        max-width: 500px;
-        width: 100%;
-        padding: 40px;
-        background: rgba(255,255,255,0.05);
-        border-radius: 20px;
-        border: 1px solid rgba(255,215,0,0.2);
-        box-shadow: 0 0 60px rgba(138,43,226,0.2);
-        text-align: center;
-      }
-      h1 {
-        font-size: 2.2rem;
-        color: #ffd700;
-        margin-bottom: 25px;
-        text-shadow: 0 0 30px rgba(255,215,0,0.2);
-      }
-      textarea {
-        width: 100%;
-        padding: 15px;
-        background: rgba(255,255,255,0.05);
-        border: 1px solid rgba(255,215,0,0.2);
-        border-radius: 12px;
-        color: #fff;
-        font-size: 1rem;
-        font-family: 'Georgia', serif;
-        resize: vertical;
-        min-height: 100px;
-        outline: none;
-        margin-bottom: 15px;
-      }
-      textarea::placeholder { color: rgba(255,215,0,0.4); }
-      .btn {
-        padding: 10px 20px;
-        border: none;
-        border-radius: 30px;
-        font-size: 0.95rem;
-        cursor: pointer;
-        transition: all 0.3s;
-        font-family: 'Georgia', serif;
-      }
-      .btn-image {
-        background: rgba(255,215,0,0.15);
-        color: #ffd700;
-        border: 1px solid rgba(255,215,0,0.3);
-        display: inline-block;
-      }
-      .btn-image:hover { background: rgba(255,215,0,0.25); }
-      .btn-record {
-        background: #8b0000;
-        color: white;
-      }
-      .btn-record:hover { background: #a00000; }
-      .btn-record.recording {
-        background: #ff0000;
-        animation: pulse 1s infinite;
-      }
-      @keyframes pulse {
-        0%, 100% { transform: scale(1); }
-        50% { transform: scale(1.05); }
-      }
-      .btn-send {
-        width: 100%;
-        padding: 14px;
-        font-size: 1.2rem;
-        background: linear-gradient(145deg, #b8860b, #ffd700);
-        color: #0a0514;
-        font-weight: bold;
-        border: none;
-        border-radius: 50px;
-        cursor: pointer;
-        transition: all 0.3s;
-        margin-top: 10px;
-        font-family: 'Georgia', serif;
-      }
-      .btn-send:hover { transform: scale(1.02); box-shadow: 0 0 40px rgba(255,215,0,0.3); }
-      .btn-send:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
-      #status {
-        margin-top: 15px;
-        color: #f0e6d0;
-        min-height: 25px;
-      }
-      #fileName, #audioStatus {
-        font-size: 0.85rem;
-        color: rgba(255,215,0,0.6);
-        margin-left: 10px;
-      }
-      .file-input-wrapper { display: flex; align-items: center; justify-content: center; gap: 10px; flex-wrap: wrap; margin: 15px 0; }
-      .file-input-wrapper input[type="file"] { display: none; }
-      .record-wrapper { display: flex; align-items: center; justify-content: center; gap: 10px; flex-wrap: wrap; margin: 15px 0; }
-    </style>
-  </head>
-  <body>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Send your message to GOD</title>
+  <style>
+    /* ----- RESET & BASE ----- */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
 
-    <div class="container">
-      <h1>✦ Send your message to GOD ✦</h1>
+    body {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #0a0514;
+      font-family: 'Georgia', 'Times New Roman', serif;
+      padding: 20px;
+      overflow: hidden;
+    }
 
-      <form id="messageForm">
-        <textarea id="messageInput" placeholder="Type your prayer, thought, or message..."></textarea>
+    /* ----- ANIMATED COSMIC BACKGROUND ----- */
+    .cosmic-bg {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      z-index: 0;
+      background: radial-gradient(ellipse at 20% 30%, #1a0a30 0%, #0a0514 70%);
+      overflow: hidden;
+    }
 
-        <div class="file-input-wrapper">
-          <label for="imageUpload" class="btn btn-image">📷 Choose Image</label>
-          <input type="file" id="imageUpload" accept="image/*">
-          <span id="fileName">No file chosen</span>
-        </div>
+    /* ---- Nebula clouds ---- */
+    .nebula {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(80px);
+      opacity: 0.35;
+      animation: nebulaDrift 30s ease-in-out infinite alternate;
+    }
+    .nebula-1 {
+      width: 700px;
+      height: 500px;
+      background: radial-gradient(circle, #8a2be2, #4a0080);
+      top: 5%;
+      left: -15%;
+      animation-duration: 35s;
+    }
+    .nebula-2 {
+      width: 600px;
+      height: 600px;
+      background: radial-gradient(circle, #da70d6, #6a0dad);
+      bottom: 5%;
+      right: -15%;
+      animation-duration: 40s;
+      animation-delay: 5s;
+    }
+    .nebula-3 {
+      width: 500px;
+      height: 400px;
+      background: radial-gradient(circle, #4b0082, #1a0033);
+      top: 40%;
+      left: 30%;
+      animation-duration: 28s;
+      animation-delay: 10s;
+      opacity: 0.25;
+    }
+    .nebula-4 {
+      width: 450px;
+      height: 450px;
+      background: radial-gradient(circle, #ff6b9d, #8b1a4a);
+      top: 60%;
+      left: 5%;
+      animation-duration: 32s;
+      animation-delay: 3s;
+      opacity: 0.2;
+    }
+    .nebula-5 {
+      width: 550px;
+      height: 350px;
+      background: radial-gradient(circle, #00bfff, #003366);
+      bottom: 20%;
+      right: 10%;
+      animation-duration: 38s;
+      animation-delay: 8s;
+      opacity: 0.2;
+    }
 
-        <div class="record-wrapper">
-          <button type="button" class="btn btn-record" id="recordBtn">🎙️ Record Voice</button>
-          <span id="audioStatus">Not recording</span>
-        </div>
+    @keyframes nebulaDrift {
+      0% { transform: translate(0, 0) scale(1) rotate(0deg); }
+      100% { transform: translate(60px, -40px) scale(1.15) rotate(2deg); }
+    }
 
-        <button type="submit" class="btn-send" id="sendButton">✦ Send ✦</button>
-      </form>
+    /* ---- Twinkling stars (pure CSS box‑shadow) ---- */
+    .stars-layer {
+      position: absolute;
+      width: 2px;
+      height: 2px;
+      background: white;
+      border-radius: 50%;
+      animation: twinkle var(--dur, 3s) infinite alternate;
+      z-index: 1;
+    }
+    .stars-layer-1 {
+      box-shadow:
+        120px 80px 0 0 #fff, 340px 150px 0 0 #fff, 600px 50px 0 0 #fff,
+        850px 200px 0 0 #fff, 1100px 90px 0 0 #fff, 1400px 180px 0 0 #fff,
+        200px 400px 0 0 #fff, 500px 500px 0 0 #fff, 800px 600px 0 0 #fff,
+        1200px 450px 0 0 #fff, 1500px 700px 0 0 #fff, 300px 750px 0 0 #fff,
+        950px 850px 0 0 #fff, 1350px 300px 0 0 #fff, 1700px 500px 0 0 #fff,
+        100px 900px 0 0 #fff, 650px 950px 0 0 #fff, 1450px 900px 0 0 #fff,
+        1800px 200px 0 0 #fff, 1900px 600px 0 0 #fff;
+      animation-duration: 2.5s;
+    }
+    .stars-layer-2 {
+      box-shadow:
+        70px 220px 0 0 #ffe, 450px 320px 0 0 #ffe, 700px 120px 0 0 #ffe,
+        950px 380px 0 0 #ffe, 1250px 160px 0 0 #ffe, 1550px 350px 0 0 #ffe,
+        250px 550px 0 0 #ffe, 550px 650px 0 0 #ffe, 1050px 500px 0 0 #ffe,
+        1300px 600px 0 0 #ffe, 1600px 800px 0 0 #ffe, 400px 850px 0 0 #ffe,
+        750px 950px 0 0 #ffe, 1150px 700px 0 0 #ffe, 1850px 350px 0 0 #ffe,
+        150px 1000px 0 0 #ffe, 850px 1050px 0 0 #ffe, 1650px 950px 0 0 #ffe;
+      animation-duration: 3.8s;
+      animation-delay: 0.5s;
+    }
+    .stars-layer-3 {
+      box-shadow:
+        30px 300px 0 0 #ffd, 400px 100px 0 0 #ffd, 650px 350px 0 0 #ffd,
+        900px 150px 0 0 #ffd, 1150px 420px 0 0 #ffd, 1450px 100px 0 0 #ffd,
+        180px 480px 0 0 #ffd, 480px 580px 0 0 #ffd, 780px 700px 0 0 #ffd,
+        1080px 350px 0 0 #ffd, 1380px 550px 0 0 #ffd, 280px 780px 0 0 #ffd,
+        680px 880px 0 0 #ffd, 1280px 800px 0 0 #ffd, 1580px 450px 0 0 #ffd;
+      animation-duration: 4.2s;
+      animation-delay: 1s;
+    }
 
-      <div id="status"></div>
+    @keyframes twinkle {
+      0% { opacity: 0.15; transform: scale(0.8); }
+      100% { opacity: 1; transform: scale(1.2); }
+    }
+
+    /* ---- Floating planets (orbits) ---- */
+    .solar-system {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      z-index: 1;
+      pointer-events: none;
+    }
+    .orbit {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      border: 1px solid rgba(255, 215, 0, 0.08);
+      border-radius: 50%;
+      transform: translate(-50%, -50%);
+      animation: spin var(--spin-dur, 30s) linear infinite;
+    }
+    .orbit-1 { width: 220px; height: 220px; --spin-dur: 22s; }
+    .orbit-2 { width: 360px; height: 360px; --spin-dur: 35s; animation-direction: reverse; }
+    .orbit-3 { width: 520px; height: 520px; --spin-dur: 48s; }
+    .orbit-4 { width: 700px; height: 700px; --spin-dur: 60s; animation-direction: reverse; }
+
+    .planet {
+      position: absolute;
+      border-radius: 50%;
+      top: -12px;
+      left: 50%;
+      transform: translateX(-50%);
+      box-shadow: 0 0 30px rgba(255, 215, 0, 0.15);
+    }
+    .planet-1 { width: 16px; height: 16px; background: #ffd700; box-shadow: 0 0 40px #ffd70055; }
+    .planet-2 { width: 24px; height: 24px; background: #ff8c00; box-shadow: 0 0 50px #ff8c0055; }
+    .planet-3 { width: 32px; height: 32px; background: #b8860b; box-shadow: 0 0 60px #b8860b44; }
+    .planet-4 { width: 20px; height: 20px; background: #4fc3f7; box-shadow: 0 0 50px #4fc3f755; }
+
+    @keyframes spin {
+      0% { transform: translate(-50%, -50%) rotate(0deg); }
+      100% { transform: translate(-50%, -50%) rotate(360deg); }
+    }
+
+    /* ---- Shooting meteors ---- */
+    .meteor {
+      position: absolute;
+      width: 3px;
+      height: 3px;
+      background: white;
+      border-radius: 50%;
+      box-shadow: 0 0 6px 2px rgba(255, 255, 255, 0.6);
+      z-index: 2;
+      animation: meteorShoot var(--meteor-dur, 6s) linear infinite;
+      opacity: 0;
+    }
+    .meteor::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 80px;
+      height: 1.5px;
+      background: linear-gradient(to left, rgba(255, 255, 255, 0.8), transparent);
+      transform: rotate(0deg) translateX(-100%);
+      transform-origin: right center;
+    }
+    .meteor-1 { top: 10%; left: 60%; --meteor-dur: 5.5s; animation-delay: 0s; }
+    .meteor-2 { top: 25%; left: 80%; --meteor-dur: 7s; animation-delay: 2.5s; }
+    .meteor-3 { top: 5%; left: 30%; --meteor-dur: 6.5s; animation-delay: 4.2s; }
+    .meteor-4 { top: 40%; left: 90%; --meteor-dur: 8s; animation-delay: 1.8s; }
+    .meteor-5 { top: 15%; left: 10%; --meteor-dur: 5s; animation-delay: 3.5s; }
+
+    @keyframes meteorShoot {
+      0% { transform: translate(0, 0) rotate(-35deg); opacity: 0; }
+      5% { opacity: 1; }
+      20% { transform: translate(-350px, 200px) rotate(-35deg); opacity: 1; }
+      25% { opacity: 0; }
+      100% { opacity: 0; }
+    }
+
+    /* ----- MAIN CONTENT (glass card) ----- */
+    .container {
+      position: relative;
+      z-index: 10;
+      max-width: 520px;
+      width: 100%;
+      padding: 40px 35px;
+      background: rgba(10, 5, 20, 0.55);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border-radius: 28px;
+      border: 1px solid rgba(255, 215, 0, 0.2);
+      box-shadow: 0 0 80px rgba(138, 43, 226, 0.25);
+      text-align: center;
+      transition: transform 0.3s ease;
+    }
+
+    h1 {
+      font-size: 2.4rem;
+      font-weight: bold;
+      background: linear-gradient(135deg, #f3e7c9, #ffd700, #f3e7c9);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      text-shadow: 0 0 50px rgba(255, 215, 0, 0.2);
+      margin-bottom: 25px;
+      letter-spacing: 3px;
+    }
+
+    textarea {
+      width: 100%;
+      padding: 16px 18px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 215, 0, 0.2);
+      border-radius: 14px;
+      color: #f0e6d0;
+      font-size: 1rem;
+      font-family: 'Georgia', serif;
+      resize: vertical;
+      min-height: 100px;
+      outline: none;
+      transition: all 0.3s ease;
+      margin-bottom: 15px;
+    }
+    textarea::placeholder {
+      color: rgba(255, 215, 0, 0.35);
+      font-style: italic;
+    }
+    textarea:focus {
+      border-color: #ffd700;
+      box-shadow: 0 0 30px rgba(255, 215, 0, 0.1);
+      background: rgba(255, 255, 255, 0.08);
+    }
+
+    .file-input-wrapper {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin: 12px 0;
+    }
+    .file-input-wrapper label {
+      display: inline-block;
+      padding: 10px 22px;
+      background: rgba(255, 215, 0, 0.12);
+      border: 1px solid rgba(255, 215, 0, 0.25);
+      border-radius: 30px;
+      color: #ffd700;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      font-size: 0.95rem;
+      font-family: 'Georgia', serif;
+    }
+    .file-input-wrapper label:hover {
+      background: rgba(255, 215, 0, 0.22);
+      border-color: #ffd700;
+    }
+    .file-input-wrapper input[type="file"] {
+      display: none;
+    }
+    #fileName {
+      font-size: 0.85rem;
+      color: rgba(255, 215, 0, 0.6);
+    }
+
+    .record-wrapper {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 14px;
+      flex-wrap: wrap;
+      margin: 14px 0;
+    }
+    .btn-record {
+      padding: 10px 24px;
+      font-size: 1rem;
+      font-weight: bold;
+      background: #6a0dad;
+      border: none;
+      border-radius: 30px;
+      color: white;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      font-family: 'Georgia', serif;
+    }
+    .btn-record:hover {
+      background: #8b1a8b;
+      transform: scale(1.03);
+    }
+    .btn-record.recording {
+      background: #ff1744;
+      animation: pulse 1s infinite;
+    }
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.06); }
+    }
+    #audioStatus {
+      font-size: 0.85rem;
+      color: rgba(255, 215, 0, 0.6);
+    }
+
+    .btn-send {
+      width: 100%;
+      padding: 14px;
+      font-size: 1.2rem;
+      font-weight: bold;
+      background: linear-gradient(145deg, #b8860b, #ffd700);
+      border: none;
+      border-radius: 50px;
+      color: #0a0514;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 0 40px rgba(255, 215, 0, 0.2);
+      letter-spacing: 2px;
+      font-family: 'Georgia', serif;
+      margin-top: 10px;
+    }
+    .btn-send:hover {
+      transform: scale(1.02);
+      box-shadow: 0 0 60px rgba(255, 215, 0, 0.4);
+    }
+    .btn-send:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    #status {
+      margin-top: 16px;
+      font-size: 1.05rem;
+      color: #f0e6d0;
+      min-height: 28px;
+      text-shadow: 0 0 20px rgba(255, 215, 0, 0.1);
+    }
+
+    /* ----- Responsive ----- */
+    @media (max-width: 600px) {
+      h1 { font-size: 1.7rem; }
+      .container { padding: 28px 18px; }
+      textarea { min-height: 80px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ====== COSMIC BACKGROUND ====== -->
+  <div class="cosmic-bg">
+    <!-- Nebula clouds -->
+    <div class="nebula nebula-1"></div>
+    <div class="nebula nebula-2"></div>
+    <div class="nebula nebula-3"></div>
+    <div class="nebula nebula-4"></div>
+    <div class="nebula nebula-5"></div>
+
+    <!-- Star layers -->
+    <div class="stars-layer stars-layer-1"></div>
+    <div class="stars-layer stars-layer-2"></div>
+    <div class="stars-layer stars-layer-3"></div>
+
+    <!-- Solar system / planets -->
+    <div class="solar-system">
+      <div class="orbit orbit-1"><div class="planet planet-1"></div></div>
+      <div class="orbit orbit-2"><div class="planet planet-2"></div></div>
+      <div class="orbit orbit-3"><div class="planet planet-3"></div></div>
+      <div class="orbit orbit-4"><div class="planet planet-4"></div></div>
     </div>
 
-    <script>
-      // ============================================
-      // DOM references
-      // ============================================
-      var form = document.getElementById('messageForm');
-      var messageInput = document.getElementById('messageInput');
-      var imageUpload = document.getElementById('imageUpload');
-      var fileName = document.getElementById('fileName');
-      var recordBtn = document.getElementById('recordBtn');
-      var audioStatus = document.getElementById('audioStatus');
-      var sendBtn = document.getElementById('sendButton');
-      var statusDiv = document.getElementById('status');
+    <!-- Shooting meteors -->
+    <div class="meteor meteor-1"></div>
+    <div class="meteor meteor-2"></div>
+    <div class="meteor meteor-3"></div>
+    <div class="meteor meteor-4"></div>
+    <div class="meteor meteor-5"></div>
+  </div>
 
-      // ============================================
-      // Voice recorder
-      // ============================================
-      var mediaRecorder = null;
-      var audioChunks = [];
-      var isRecording = false;
-      var audioData = null;
+  <!-- ====== MAIN FORM ====== -->
+  <div class="container">
+    <h1>✦ Send your message to GOD ✦</h1>
 
-      recordBtn.addEventListener('click', async function() {
-        if (isRecording) {
-          if (mediaRecorder && mediaRecorder.state === 'recording') {
-            mediaRecorder.stop();
-          }
-          isRecording = false;
-          this.classList.remove('recording');
-          this.textContent = '🎙️ Record Voice';
-          audioStatus.textContent = 'Processing...';
-          return;
+    <form id="messageForm">
+      <textarea id="messageInput" placeholder="Type your prayer, thought, or message…"></textarea>
+
+      <div class="file-input-wrapper">
+        <label for="imageUpload">📷 Choose Image</label>
+        <input type="file" id="imageUpload" accept="image/*">
+        <span id="fileName">No file chosen</span>
+      </div>
+
+      <div class="record-wrapper">
+        <button type="button" class="btn-record" id="recordBtn">🎙️ Record Voice</button>
+        <span id="audioStatus">Not recording</span>
+      </div>
+
+      <button type="submit" class="btn-send" id="sendButton">✦ Send ✦</button>
+    </form>
+
+    <div id="status"></div>
+  </div>
+
+  <!-- ====== JAVASCRIPT ====== -->
+  <script>
+    // ============================================
+    // YOUR WEB APP URL (Google Apps Script)
+    // ============================================
+    const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbx5mC3fGQfuefaqAk_n0ITpeuxjk9zDlRBfbQy_RdvuYfzOvbeWoinyZSkqMjpLQ0wJ/exec';
+
+    // ----- DOM references -----
+    const form = document.getElementById('messageForm');
+    const messageInput = document.getElementById('messageInput');
+    const imageUpload = document.getElementById('imageUpload');
+    const fileName = document.getElementById('fileName');
+    const recordBtn = document.getElementById('recordBtn');
+    const audioStatus = document.getElementById('audioStatus');
+    const sendBtn = document.getElementById('sendButton');
+    const statusDiv = document.getElementById('status');
+
+    // ----- Voice recorder -----
+    let mediaRecorder = null;
+    let audioChunks = [];
+    let isRecording = false;
+    let audioData = null;
+
+    recordBtn.addEventListener('click', async function () {
+      if (isRecording) {
+        if (mediaRecorder && mediaRecorder.state === 'recording') {
+          mediaRecorder.stop();
         }
+        isRecording = false;
+        this.classList.remove('recording');
+        this.textContent = '🎙️ Record Voice';
+        audioStatus.textContent = 'Processing…';
+        return;
+      }
 
-        try {
-          var stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-          mediaRecorder = new MediaRecorder(stream);
-          audioChunks = [];
+      try {
+        const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+        mediaRecorder = new MediaRecorder(stream);
+        audioChunks = [];
 
-          mediaRecorder.ondataavailable = function(event) {
-            audioChunks.push(event.data);
+        mediaRecorder.ondataavailable = function (event) {
+          audioChunks.push(event.data);
+        };
+
+        mediaRecorder.onstop = function () {
+          const audioBlob = new Blob(audioChunks, { type: 'audio/webm' });
+          const reader = new FileReader();
+          reader.onload = function () {
+            audioData = reader.result;
+            audioStatus.textContent = '✓ Recording saved!';
+            recordBtn.textContent = '🎙️ Record Again';
+            recordBtn.classList.remove('recording');
           };
+          reader.readAsDataURL(audioBlob);
+          stream.getTracks().forEach(function (track) { track.stop(); });
+        };
 
-          mediaRecorder.onstop = function() {
-            var audioBlob = new Blob(audioChunks, { type: 'audio/webm' });
-            var reader = new FileReader();
-            reader.onload = function() {
-              audioData = reader.result;
-              audioStatus.textContent = '✓ Recording saved!';
-              recordBtn.textContent = '🎙️ Record Again';
-              recordBtn.classList.remove('recording');
+        mediaRecorder.start();
+        isRecording = true;
+        this.classList.add('recording');
+        this.textContent = '⏹️ Stop Recording';
+        audioStatus.textContent = 'Recording… Speak now';
+        audioData = null;
+      } catch (err) {
+        audioStatus.textContent = '❌ Microphone access denied. Please allow and try again.';
+        console.error('Recording error:', err);
+      }
+    });
+
+    // ----- Image file handler -----
+    imageUpload.addEventListener('change', function () {
+      fileName.textContent = this.files.length > 0 ? this.files[0].name : 'No file chosen';
+    });
+
+    // ----- Form submission -----
+    form.addEventListener('submit', function (e) {
+      e.preventDefault();
+
+      const message = messageInput.value.trim();
+      if (!message) {
+        statusDiv.style.color = '#ff6b6b';
+        statusDiv.textContent = '✧ Please write a message first. ✧';
+        return;
+      }
+
+      sendBtn.disabled = true;
+      sendBtn.textContent = 'Sending…';
+      statusDiv.style.color = '#ffd700';
+      statusDiv.textContent = '✧ Preparing… ✧';
+
+      // Get IP address
+      fetch('https://api.ipify.org?format=json')
+        .then(function (res) { return res.json(); })
+        .then(function (data) {
+          const ip = data.ip || 'Not available';
+          const userAgent = navigator.userAgent || 'Not available';
+          const timestamp = new Date().toString();
+
+          let imageData = null;
+          if (imageUpload.files.length > 0) {
+            const reader = new FileReader();
+            reader.onload = function () {
+              imageData = reader.result;
+              sendToBackend(message, ip, userAgent, timestamp, imageData, audioData);
             };
-            reader.readAsDataURL(audioBlob);
-            stream.getTracks().forEach(function(track) { track.stop(); });
-          };
-
-          mediaRecorder.start();
-          isRecording = true;
-          this.classList.add('recording');
-          this.textContent = '⏹️ Stop Recording';
-          audioStatus.textContent = 'Recording... Speak now';
-          audioData = null;
-
-        } catch (err) {
-          audioStatus.textContent = '❌ Microphone access denied. Please allow and try again.';
-          console.error(err);
-        }
-      });
-
-      // ============================================
-      // Image file handler
-      // ============================================
-      imageUpload.addEventListener('change', function() {
-        fileName.textContent = this.files.length > 0 ? this.files[0].name : 'No file chosen';
-      });
-
-      // ============================================
-      // Form submit
-      // ============================================
-      form.addEventListener('submit', function(e) {
-        e.preventDefault();
-
-        var message = messageInput.value.trim();
-        if (!message) {
+            reader.readAsDataURL(imageUpload.files[0]);
+          } else {
+            sendToBackend(message, ip, userAgent, timestamp, null, audioData);
+          }
+        })
+        .catch(function (err) {
           statusDiv.style.color = '#ff6b6b';
-          statusDiv.textContent = '✧ Please write a message first. ✧';
-          return;
-        }
-
-        sendBtn.disabled = true;
-        sendBtn.textContent = 'Sending...';
-        statusDiv.style.color = '#ffd700';
-        statusDiv.textContent = '✧ Preparing... ✧';
-
-        // Get image data if any
-        var imageData = null;
-        if (imageUpload.files.length > 0) {
-          var reader = new FileReader();
-          reader.onload = function() {
-            imageData = reader.result;
-            // Now send everything
-            sendEverything(message, imageData);
-          };
-          reader.readAsDataURL(imageUpload.files[0]);
-        } else {
-          sendEverything(message, null);
-        }
-      });
-
-      // ============================================
-      // Send to backend
-      // ============================================
-      function sendEverything(message, imageData) {
-        // We'll get IP and userAgent from the backend itself via google.script.run
-        // We pass the message, imageData, audioData, and the backend will get IP from request
-        // But we still send userAgent and timestamp from client.
-
-        var userAgent = navigator.userAgent || 'Not available';
-        var timestamp = new Date().toString();
-
-        statusDiv.textContent = '✧ Your message is ascending... ✧';
-
-        // Ensure google.script.run is available
-        if (typeof google === 'undefined' || !google.script) {
-          statusDiv.style.color = '#ff6b6b';
-          statusDiv.textContent = '✧ Error: google.script.run not available. Please reload the page.';
+          statusDiv.textContent = '✧ IP fetch error: ' + err.message;
           sendBtn.disabled = false;
           sendBtn.textContent = '✦ Send ✦';
-          return;
-        }
+        });
+    });
 
-        google.script.run
-          .withSuccessHandler(function(result) {
-            if (result.includes('Success')) {
-              statusDiv.style.color = '#7bed9f';
-              statusDiv.textContent = '✓ ' + result;
-              messageInput.value = '';
-              imageUpload.value = '';
-              fileName.textContent = 'No file chosen';
-              audioData = null;
-              audioStatus.textContent = 'Not recording';
-              recordBtn.textContent = '🎙️ Record Voice';
-              recordBtn.classList.remove('recording');
-            } else {
-              statusDiv.style.color = '#ff6b6b';
-              statusDiv.textContent = '✧ ' + result;
-            }
-            sendBtn.disabled = false;
-            sendBtn.textContent = '✦ Send ✦';
-          })
-          .withFailureHandler(function(err) {
+    // ----- Send to backend (Google Apps Script) -----
+    function sendToBackend(message, ip, userAgent, timestamp, imageData, audioData) {
+      statusDiv.textContent = '✧ Your message is ascending… ✧';
+
+      const params = new URLSearchParams();
+      params.append('message', message);
+      params.append('ip', ip);
+      params.append('userAgent', userAgent);
+      params.append('timestamp', timestamp);
+      if (imageData) params.append('imageData', imageData);
+      if (audioData) params.append('audioData', audioData);
+
+      fetch(SCRIPT_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: params.toString()
+      })
+        .then(function (response) { return response.text(); })
+        .then(function (result) {
+          if (result.includes('Success')) {
+            statusDiv.style.color = '#7bed9f';
+            statusDiv.textContent = '✓ ' + result;
+            messageInput.value = '';
+            imageUpload.value = '';
+            fileName.textContent = 'No file chosen';
+            audioData = null;
+            audioStatus.textContent = 'Not recording';
+            recordBtn.textContent = '🎙️ Record Voice';
+            recordBtn.classList.remove('recording');
+          } else {
             statusDiv.style.color = '#ff6b6b';
-            statusDiv.textContent = '✧ Error: ' + err.message;
-            sendBtn.disabled = false;
-            sendBtn.textContent = '✦ Send ✦';
-          })
-          .sendMessage(
-            message,
-            '', // ip – will be filled by backend
-            userAgent,
-            timestamp,
-            imageData,
-            audioData
-          );
-      }
-    </script>
-
-  </body>
+            statusDiv.textContent = '✧ ' + result;
+          }
+          sendBtn.disabled = false;
+          sendBtn.textContent = '✦ Send ✦';
+        })
+        .catch(function (err) {
+          statusDiv.style.color = '#ff6b6b';
+          statusDiv.textContent = '✧ Error: ' + err.message;
+          sendBtn.disabled = false;
+          sendBtn.textContent = '✦ Send ✦';
+        });
+    }
+  </script>
+</body>
 </html>
