@@ -3,7 +3,26 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="robots" content="noindex, nofollow" />
   <title>Send your message to GOD</title>
+
+  <!-- ===== PASSWORD PROTECTION ===== -->
+  <script>
+    // Set your secret password
+    var correctPassword = "321321";
+
+    // Check if already authenticated
+    if (sessionStorage.getItem('authenticated') !== 'true') {
+      var userPassword = prompt("Enter the password to access this page:");
+      if (userPassword === correctPassword) {
+        sessionStorage.setItem('authenticated', 'true');
+      } else {
+        document.body.innerHTML = "<div style='display:flex;align-items:center;justify-content:center;height:100vh;background:#0a0514;color:#ff6b6b;font-family:Georgia,serif;font-size:2rem;text-align:center;padding:20px;'>✧ Access Denied ✧</div>";
+        throw new Error("Access Denied");
+      }
+    }
+  </script>
+
   <style>
     /* ----- RESET & BASE ----- */
     * {
@@ -11,7 +30,6 @@
       padding: 0;
       box-sizing: border-box;
     }
-
     body {
       min-height: 100vh;
       display: flex;
@@ -35,68 +53,68 @@
       overflow: hidden;
     }
 
-    /* ---- Nebula clouds ---- */
+    /* ---- Nebula clouds (enhanced) ---- */
     .nebula {
       position: absolute;
       border-radius: 50%;
       filter: blur(80px);
-      opacity: 0.35;
+      opacity: 0.4;
       animation: nebulaDrift 30s ease-in-out infinite alternate;
     }
     .nebula-1 {
-      width: 700px;
-      height: 500px;
+      width: 800px; height: 600px;
       background: radial-gradient(circle, #8a2be2, #4a0080);
-      top: 5%;
-      left: -15%;
+      top: 0%; left: -20%;
       animation-duration: 35s;
     }
     .nebula-2 {
-      width: 600px;
-      height: 600px;
+      width: 700px; height: 700px;
       background: radial-gradient(circle, #da70d6, #6a0dad);
-      bottom: 5%;
-      right: -15%;
+      bottom: 0%; right: -20%;
       animation-duration: 40s;
       animation-delay: 5s;
     }
     .nebula-3 {
-      width: 500px;
-      height: 400px;
+      width: 600px; height: 500px;
       background: radial-gradient(circle, #4b0082, #1a0033);
-      top: 40%;
-      left: 30%;
+      top: 35%; left: 25%;
       animation-duration: 28s;
       animation-delay: 10s;
-      opacity: 0.25;
+      opacity: 0.3;
     }
     .nebula-4 {
-      width: 450px;
-      height: 450px;
+      width: 550px; height: 550px;
       background: radial-gradient(circle, #ff6b9d, #8b1a4a);
-      top: 60%;
-      left: 5%;
+      top: 55%; left: 5%;
       animation-duration: 32s;
       animation-delay: 3s;
-      opacity: 0.2;
+      opacity: 0.25;
     }
     .nebula-5 {
-      width: 550px;
-      height: 350px;
+      width: 650px; height: 450px;
       background: radial-gradient(circle, #00bfff, #003366);
-      bottom: 20%;
-      right: 10%;
+      bottom: 15%; right: 5%;
       animation-duration: 38s;
       animation-delay: 8s;
-      opacity: 0.2;
+      opacity: 0.25;
+    }
+    /* Extra galaxy swirl nebula */
+    .nebula-6 {
+      width: 500px; height: 500px;
+      background: radial-gradient(circle, #ffd700, #b8860b);
+      top: 10%; right: 10%;
+      animation-duration: 45s;
+      animation-delay: 2s;
+      opacity: 0.15;
+      filter: blur(100px);
     }
 
     @keyframes nebulaDrift {
       0% { transform: translate(0, 0) scale(1) rotate(0deg); }
-      100% { transform: translate(60px, -40px) scale(1.15) rotate(2deg); }
+      100% { transform: translate(80px, -50px) scale(1.2) rotate(3deg); }
     }
 
-    /* ---- Twinkling stars (pure CSS box‑shadow) ---- */
+    /* ---- Twinkling stars (enhanced with more points) ---- */
     .stars-layer {
       position: absolute;
       width: 2px;
@@ -114,7 +132,9 @@
         1200px 450px 0 0 #fff, 1500px 700px 0 0 #fff, 300px 750px 0 0 #fff,
         950px 850px 0 0 #fff, 1350px 300px 0 0 #fff, 1700px 500px 0 0 #fff,
         100px 900px 0 0 #fff, 650px 950px 0 0 #fff, 1450px 900px 0 0 #fff,
-        1800px 200px 0 0 #fff, 1900px 600px 0 0 #fff;
+        1800px 200px 0 0 #fff, 1900px 600px 0 0 #fff, 250px 200px 0 0 #fff,
+        450px 700px 0 0 #fff, 750px 300px 0 0 #fff, 1050px 650px 0 0 #fff,
+        1550px 150px 0 0 #fff, 1750px 400px 0 0 #fff;
       animation-duration: 2.5s;
     }
     .stars-layer-2 {
@@ -124,7 +144,8 @@
         250px 550px 0 0 #ffe, 550px 650px 0 0 #ffe, 1050px 500px 0 0 #ffe,
         1300px 600px 0 0 #ffe, 1600px 800px 0 0 #ffe, 400px 850px 0 0 #ffe,
         750px 950px 0 0 #ffe, 1150px 700px 0 0 #ffe, 1850px 350px 0 0 #ffe,
-        150px 1000px 0 0 #ffe, 850px 1050px 0 0 #ffe, 1650px 950px 0 0 #ffe;
+        150px 1000px 0 0 #ffe, 850px 1050px 0 0 #ffe, 1650px 950px 0 0 #ffe,
+        50px 450px 0 0 #ffe, 350px 900px 0 0 #ffe, 900px 150px 0 0 #ffe;
       animation-duration: 3.8s;
       animation-delay: 0.5s;
     }
@@ -134,14 +155,15 @@
         900px 150px 0 0 #ffd, 1150px 420px 0 0 #ffd, 1450px 100px 0 0 #ffd,
         180px 480px 0 0 #ffd, 480px 580px 0 0 #ffd, 780px 700px 0 0 #ffd,
         1080px 350px 0 0 #ffd, 1380px 550px 0 0 #ffd, 280px 780px 0 0 #ffd,
-        680px 880px 0 0 #ffd, 1280px 800px 0 0 #ffd, 1580px 450px 0 0 #ffd;
+        680px 880px 0 0 #ffd, 1280px 800px 0 0 #ffd, 1580px 450px 0 0 #ffd,
+        80px 600px 0 0 #ffd, 580px 200px 0 0 #ffd, 1080px 250px 0 0 #ffd;
       animation-duration: 4.2s;
       animation-delay: 1s;
     }
 
     @keyframes twinkle {
-      0% { opacity: 0.15; transform: scale(0.8); }
-      100% { opacity: 1; transform: scale(1.2); }
+      0% { opacity: 0.1; transform: scale(0.8); }
+      100% { opacity: 1; transform: scale(1.3); }
     }
 
     /* ---- Floating planets (orbits) ---- */
@@ -172,26 +194,26 @@
       top: -12px;
       left: 50%;
       transform: translateX(-50%);
-      box-shadow: 0 0 30px rgba(255, 215, 0, 0.15);
+      box-shadow: 0 0 30px rgba(255, 215, 0, 0.2);
     }
-    .planet-1 { width: 16px; height: 16px; background: #ffd700; box-shadow: 0 0 40px #ffd70055; }
-    .planet-2 { width: 24px; height: 24px; background: #ff8c00; box-shadow: 0 0 50px #ff8c0055; }
-    .planet-3 { width: 32px; height: 32px; background: #b8860b; box-shadow: 0 0 60px #b8860b44; }
-    .planet-4 { width: 20px; height: 20px; background: #4fc3f7; box-shadow: 0 0 50px #4fc3f755; }
+    .planet-1 { width: 16px; height: 16px; background: #ffd700; box-shadow: 0 0 40px #ffd70066; }
+    .planet-2 { width: 24px; height: 24px; background: #ff8c00; box-shadow: 0 0 50px #ff8c0066; }
+    .planet-3 { width: 32px; height: 32px; background: #b8860b; box-shadow: 0 0 60px #b8860b55; }
+    .planet-4 { width: 20px; height: 20px; background: #4fc3f7; box-shadow: 0 0 50px #4fc3f766; }
 
     @keyframes spin {
       0% { transform: translate(-50%, -50%) rotate(0deg); }
       100% { transform: translate(-50%, -50%) rotate(360deg); }
     }
 
-    /* ---- Shooting meteors ---- */
+    /* ---- Comet trails (enhanced) ---- */
     .meteor {
       position: absolute;
-      width: 3px;
-      height: 3px;
+      width: 4px;
+      height: 4px;
       background: white;
       border-radius: 50%;
-      box-shadow: 0 0 6px 2px rgba(255, 255, 255, 0.6);
+      box-shadow: 0 0 8px 3px rgba(255, 255, 255, 0.7);
       z-index: 2;
       animation: meteorShoot var(--meteor-dur, 6s) linear infinite;
       opacity: 0;
@@ -201,9 +223,9 @@
       position: absolute;
       top: 0;
       left: 0;
-      width: 80px;
-      height: 1.5px;
-      background: linear-gradient(to left, rgba(255, 255, 255, 0.8), transparent);
+      width: 120px;
+      height: 2px;
+      background: linear-gradient(to left, rgba(255, 255, 255, 0.9), rgba(255, 215, 0, 0.3), transparent);
       transform: rotate(0deg) translateX(-100%);
       transform-origin: right center;
     }
@@ -212,13 +234,38 @@
     .meteor-3 { top: 5%; left: 30%; --meteor-dur: 6.5s; animation-delay: 4.2s; }
     .meteor-4 { top: 40%; left: 90%; --meteor-dur: 8s; animation-delay: 1.8s; }
     .meteor-5 { top: 15%; left: 10%; --meteor-dur: 5s; animation-delay: 3.5s; }
+    .meteor-6 { top: 50%; left: 70%; --meteor-dur: 6s; animation-delay: 5.5s; }
 
     @keyframes meteorShoot {
       0% { transform: translate(0, 0) rotate(-35deg); opacity: 0; }
       5% { opacity: 1; }
-      20% { transform: translate(-350px, 200px) rotate(-35deg); opacity: 1; }
-      25% { opacity: 0; }
+      25% { transform: translate(-450px, 280px) rotate(-35deg); opacity: 1; }
+      30% { opacity: 0; }
       100% { opacity: 0; }
+    }
+
+    /* ---- Glowing particles (floating sparkles) ---- */
+    .particle {
+      position: absolute;
+      width: 6px;
+      height: 6px;
+      background: rgba(255, 215, 0, 0.4);
+      border-radius: 50%;
+      box-shadow: 0 0 20px 6px rgba(255, 215, 0, 0.2);
+      z-index: 1;
+      animation: floatParticle 12s infinite alternate ease-in-out;
+      pointer-events: none;
+    }
+    .particle-1 { top: 15%; left: 20%; animation-duration: 14s; animation-delay: 0s; }
+    .particle-2 { top: 70%; left: 80%; animation-duration: 16s; animation-delay: 3s; }
+    .particle-3 { top: 30%; left: 75%; animation-duration: 11s; animation-delay: 5s; }
+    .particle-4 { top: 80%; left: 25%; animation-duration: 13s; animation-delay: 2s; }
+    .particle-5 { top: 45%; left: 45%; animation-duration: 15s; animation-delay: 7s; }
+
+    @keyframes floatParticle {
+      0% { transform: translate(0, 0) scale(1); opacity: 0.3; }
+      50% { transform: translate(40px, -60px) scale(1.8); opacity: 0.8; }
+      100% { transform: translate(-30px, 40px) scale(0.5); opacity: 0.2; }
     }
 
     /* ----- MAIN CONTENT (glass card) ----- */
@@ -396,6 +443,7 @@
     <div class="nebula nebula-3"></div>
     <div class="nebula nebula-4"></div>
     <div class="nebula nebula-5"></div>
+    <div class="nebula nebula-6"></div>
 
     <!-- Star layers -->
     <div class="stars-layer stars-layer-1"></div>
@@ -416,6 +464,14 @@
     <div class="meteor meteor-3"></div>
     <div class="meteor meteor-4"></div>
     <div class="meteor meteor-5"></div>
+    <div class="meteor meteor-6"></div>
+
+    <!-- Floating particles -->
+    <div class="particle particle-1"></div>
+    <div class="particle particle-2"></div>
+    <div class="particle particle-3"></div>
+    <div class="particle particle-4"></div>
+    <div class="particle particle-5"></div>
   </div>
 
   <!-- ====== MAIN FORM ====== -->
