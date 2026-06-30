@@ -1,9 +1,49 @@
-<!DOCTYPE html>
-<html>
-  <head>
-    <base target="_top">
-  </head>
-  <body>
+<script>
+  // The URL of your Google Apps Script Web App
+  const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxNC1rAhX62hn-UbxAxVWjTAP4ho2vChmEctiJdHYRPsJhoTHWJNrgmi1z8HLUCr2wGBw/exec';
+
+  document.getElementById('sendButton').addEventListener('click', function() {
+    const message = document.getElementById('messageInput').value;
+    const statusDiv = document.getElementById('status');
     
-  </body>
-</html>
+    if (!message || message.trim() === '') {
+      statusDiv.style.color = '#ff6b6b';
+      statusDiv.textContent = '✧ Please write a message first. ✧';
+      return;
+    }
+
+    const btn = this;
+    btn.disabled = true;
+    btn.textContent = 'Sending...';
+    statusDiv.style.color = '#ffd700';
+    statusDiv.textContent = '✧ Your message is ascending... ✧';
+
+    // Send the message to Google Apps Script using fetch
+    fetch(SCRIPT_URL, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+      },
+      body: 'message=' + encodeURIComponent(message)
+    })
+    .then(response => response.text())
+    .then(result => {
+      if (result.includes('Success')) {
+        statusDiv.style.color = '#7bed9f';
+        statusDiv.textContent = '✓ ' + result;
+        document.getElementById('messageInput').value = '';
+      } else {
+        statusDiv.style.color = '#ff6b6b';
+        statusDiv.textContent = '✧ ' + result;
+      }
+      btn.disabled = false;
+      btn.textContent = '✦ Send ✦';
+    })
+    .catch(error => {
+      statusDiv.style.color = '#ff6b6b';
+      statusDiv.textContent = '✧ Error: ' + error.message + '. Please try again. ✧';
+      btn.disabled = false;
+      btn.textContent = '✦ Send ✦';
+    });
+  });
+</script>
