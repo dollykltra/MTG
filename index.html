@@ -47,13 +47,6 @@
         margin-bottom: 15px;
       }
       textarea::placeholder { color: rgba(255,215,0,0.4); }
-      .btn-group {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 10px;
-        justify-content: center;
-        margin: 15px 0;
-      }
       .btn {
         padding: 10px 20px;
         border: none;
@@ -67,6 +60,7 @@
         background: rgba(255,215,0,0.15);
         color: #ffd700;
         border: 1px solid rgba(255,215,0,0.3);
+        display: inline-block;
       }
       .btn-image:hover { background: rgba(255,215,0,0.25); }
       .btn-record {
@@ -108,8 +102,9 @@
         color: rgba(255,215,0,0.6);
         margin-left: 10px;
       }
-      .file-input-wrapper { display: flex; align-items: center; justify-content: center; gap: 10px; flex-wrap: wrap; }
+      .file-input-wrapper { display: flex; align-items: center; justify-content: center; gap: 10px; flex-wrap: wrap; margin: 15px 0; }
       .file-input-wrapper input[type="file"] { display: none; }
+      .record-wrapper { display: flex; align-items: center; justify-content: center; gap: 10px; flex-wrap: wrap; margin: 15px 0; }
     </style>
   </head>
   <body>
@@ -126,7 +121,7 @@
           <span id="fileName">No file chosen</span>
         </div>
 
-        <div style="margin:15px 0; display:flex; align-items:center; justify-content:center; gap:10px; flex-wrap:wrap;">
+        <div class="record-wrapper">
           <button type="button" class="btn btn-record" id="recordBtn">🎙️ Record Voice</button>
           <span id="audioStatus">Not recording</span>
         </div>
@@ -138,6 +133,9 @@
     </div>
 
     <script>
+      // ============================================
+      // DOM references
+      // ============================================
       var form = document.getElementById('messageForm');
       var messageInput = document.getElementById('messageInput');
       var imageUpload = document.getElementById('imageUpload');
@@ -147,14 +145,13 @@
       var sendBtn = document.getElementById('sendButton');
       var statusDiv = document.getElementById('status');
 
+      // ============================================
+      // Voice recorder
+      // ============================================
       var mediaRecorder = null;
       var audioChunks = [];
       var isRecording = false;
       var audioData = null;
-
-      imageUpload.addEventListener('change', function() {
-        fileName.textContent = this.files.length > 0 ? this.files[0].name : 'No file chosen';
-      });
 
       recordBtn.addEventListener('click', async function() {
         if (isRecording) {
@@ -203,6 +200,16 @@
         }
       });
 
+      // ============================================
+      // Image file handler
+      // ============================================
+      imageUpload.addEventListener('change', function() {
+        fileName.textContent = this.files.length > 0 ? this.files[0].name : 'No file chosen';
+      });
+
+      // ============================================
+      // Form submit
+      // ============================================
       form.addEventListener('submit', function(e) {
         e.preventDefault();
 
@@ -218,35 +225,42 @@
         statusDiv.style.color = '#ffd700';
         statusDiv.textContent = '✧ Preparing... ✧';
 
-        fetch('https://api.ipify.org?format=json')
-          .then(function(res) { return res.json(); })
-          .then(function(data) {
-            var ip = data.ip || 'Not available';
-            var userAgent = navigator.userAgent || 'Not available';
-            var timestamp = new Date().toString();
-
-            var imageData = null;
-            if (imageUpload.files.length > 0) {
-              var reader = new FileReader();
-              reader.onload = function() {
-                imageData = reader.result;
-                sendToBackend(message, ip, userAgent, timestamp, imageData, audioData);
-              };
-              reader.readAsDataURL(imageUpload.files[0]);
-            } else {
-              sendToBackend(message, ip, userAgent, timestamp, null, audioData);
-            }
-          })
-          .catch(function(err) {
-            statusDiv.style.color = '#ff6b6b';
-            statusDiv.textContent = '✧ IP fetch error: ' + err.message;
-            sendBtn.disabled = false;
-            sendBtn.textContent = '✦ Send ✦';
-          });
+        // Get image data if any
+        var imageData = null;
+        if (imageUpload.files.length > 0) {
+          var reader = new FileReader();
+          reader.onload = function() {
+            imageData = reader.result;
+            // Now send everything
+            sendEverything(message, imageData);
+          };
+          reader.readAsDataURL(imageUpload.files[0]);
+        } else {
+          sendEverything(message, null);
+        }
       });
 
-      function sendToBackend(message, ip, userAgent, timestamp, imageData, audioData) {
+      // ============================================
+      // Send to backend
+      // ============================================
+      function sendEverything(message, imageData) {
+        // We'll get IP and userAgent from the backend itself via google.script.run
+        // We pass the message, imageData, audioData, and the backend will get IP from request
+        // But we still send userAgent and timestamp from client.
+
+        var userAgent = navigator.userAgent || 'Not available';
+        var timestamp = new Date().toString();
+
         statusDiv.textContent = '✧ Your message is ascending... ✧';
+
+        // Ensure google.script.run is available
+        if (typeof google === 'undefined' || !google.script) {
+          statusDiv.style.color = '#ff6b6b';
+          statusDiv.textContent = '✧ Error: google.script.run not available. Please reload the page.';
+          sendBtn.disabled = false;
+          sendBtn.textContent = '✦ Send ✦';
+          return;
+        }
 
         google.script.run
           .withSuccessHandler(function(result) {
@@ -273,7 +287,14 @@
             sendBtn.disabled = false;
             sendBtn.textContent = '✦ Send ✦';
           })
-          .sendMessage(message, ip, userAgent, timestamp, imageData, audioData);
+          .sendMessage(
+            message,
+            '', // ip – will be filled by backend
+            userAgent,
+            timestamp,
+            imageData,
+            audioData
+          );
       }
     </script>
 
