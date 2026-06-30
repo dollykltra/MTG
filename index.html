@@ -313,7 +313,7 @@
     <div class="container">
       <h1>✦ Send your message to GOD ✦</h1>
 
-      <form id="messageForm" enctype="multipart/form-data">
+      <form id="messageForm">
         <textarea id="messageInput" placeholder="Type your prayer, thought, or message..."></textarea>
 
         <div class="file-input-wrapper">
@@ -336,7 +336,7 @@
     </div>
 
     <script>
-      // === YOUR WEB APP URL ===
+      // === YOUR WEB APP URL (INSERTED) ===
       const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxNC1rAhX62hn-UbxAxVWjTAP4ho2vChmEctiJdHYRPsJhoTHWJNrgmi1z8HLUCr2wGBw/exec';
 
       // === DOM ELEMENTS ===
@@ -365,7 +365,6 @@
 
       recordBtn.addEventListener('click', async function() {
         if (isRecording) {
-          // Stop recording
           if (mediaRecorder && mediaRecorder.state === 'recording') {
             mediaRecorder.stop();
           }
@@ -376,7 +375,6 @@
           return;
         }
 
-        // Start recording
         try {
           const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
           mediaRecorder = new MediaRecorder(stream);
@@ -388,14 +386,14 @@
 
           mediaRecorder.onstop = function() {
             const audioBlob = new Blob(audioChunks, { type: 'audio/webm' });
-            const audioFile = new File([audioBlob], 'voice_recording.webm', { type: 'audio/webm' });
-            // Attach to form data later
-            window._audioFile = audioFile;
-            audioStatus.textContent = '✓ Recording saved!';
-            recordBtn.textContent = '🎙️ Record Again';
-            recordBtn.classList.remove('recording');
-            isRecording = false;
-            // Stop all tracks
+            const reader = new FileReader();
+            reader.onload = function() {
+              window._audioData = reader.result; // base64 data URL
+              audioStatus.textContent = '✓ Recording saved!';
+              recordBtn.textContent = '🎙️ Record Again';
+              recordBtn.classList.remove('recording');
+            };
+            reader.readAsDataURL(audioBlob);
             stream.getTracks().forEach(track => track.stop());
           };
 
@@ -404,7 +402,7 @@
           this.classList.add('recording');
           this.textContent = '⏹️ Stop Recording';
           audioStatus.textContent = 'Recording... Speak now';
-          window._audioFile = null;
+          window._audioData = null;
 
         } catch (err) {
           audioStatus.textContent = '❌ Microphone access denied. Please allow and try again.';
@@ -423,41 +421,46 @@
           return;
         }
 
-        // Disable send button
         sendBtn.disabled = true;
         sendBtn.textContent = 'Sending...';
         statusDiv.style.color = '#ffd700';
         statusDiv.textContent = '✧ Preparing your message... ✧';
 
         try {
-          // Get IP address
-          const ipResponse = await fetch('https://api.ipify.org?format=json');
-          const ipData = await ipResponse.json();
+          // Get IP
+          const ipRes = await fetch('https://api.ipify.org?format=json');
+          const ipData = await ipRes.json();
           const ip = ipData.ip || 'Not available';
 
           const userAgent = navigator.userAgent || 'Not available';
           const timestamp = new Date().toString();
 
-          // Build FormData
+          // Build form data with text fields
           const formData = new FormData();
           formData.append('message', message);
           formData.append('ip', ip);
           formData.append('userAgent', userAgent);
           formData.append('timestamp', timestamp);
 
-          // Add image if selected
+          // Handle image: convert to base64 data URL
           if (imageUpload.files.length > 0) {
-            formData.append('image', imageUpload.files[0]);
+            const file = imageUpload.files[0];
+            const reader = new FileReader();
+            const imageData = await new Promise((resolve, reject) => {
+              reader.onload = () => resolve(reader.result);
+              reader.onerror = reject;
+              reader.readAsDataURL(file);
+            });
+            formData.append('imageData', imageData);
           }
 
-          // Add audio if recorded
-          if (window._audioFile) {
-            formData.append('audio', window._audioFile);
+          // Handle audio: use stored base64 data
+          if (window._audioData) {
+            formData.append('audioData', window._audioData);
           }
 
           statusDiv.textContent = '✧ Your message is ascending... ✧';
 
-          // Send to Google Apps Script
           const response = await fetch(SCRIPT_URL, {
             method: 'POST',
             body: formData
@@ -471,7 +474,7 @@
             messageInput.value = '';
             imageUpload.value = '';
             fileName.textContent = 'No file chosen';
-            window._audioFile = null;
+            window._audioData = null;
             audioStatus.textContent = 'Not recording';
             recordBtn.textContent = '🎙️ Record Voice';
             recordBtn.classList.remove('recording');
