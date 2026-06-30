@@ -254,6 +254,9 @@
         color: rgba(255, 215, 0, 0.7);
         font-size: 0.9rem;
       }
+      .send-btn-wrapper {
+        margin-top: 20px;
+      }
       button.send-btn {
         padding: 14px 50px;
         font-size: 1.3rem;
@@ -323,17 +326,15 @@
           <span id="audioStatus">Not recording</span>
         </div>
 
-        <button type="submit" class="send-btn" id="sendButton">✦ Send ✦</button>
+        <div class="send-btn-wrapper">
+          <button type="submit" class="send-btn" id="sendButton">✦ Send ✦</button>
+        </div>
       </form>
 
       <div id="status"></div>
     </div>
 
     <script>
-      // ============================================
-      // FRONTEND – Using google.script.run
-      // ============================================
-
       var form = document.getElementById('messageForm');
       var messageInput = document.getElementById('messageInput');
       var imageUpload = document.getElementById('imageUpload');
@@ -348,12 +349,12 @@
       var isRecording = false;
       var audioData = null;
 
-      // === File input handler ===
+      // File input handler
       imageUpload.addEventListener('change', function() {
         fileName.textContent = this.files.length > 0 ? this.files[0].name : 'No file chosen';
       });
 
-      // === Voice recorder ===
+      // Voice recorder
       recordBtn.addEventListener('click', async function() {
         if (isRecording) {
           if (mediaRecorder && mediaRecorder.state === 'recording') {
@@ -401,7 +402,7 @@
         }
       });
 
-      // === Form submit handler using google.script.run ===
+      // Form submit handler
       form.addEventListener('submit', function(e) {
         e.preventDefault();
 
@@ -430,12 +431,10 @@
               var reader = new FileReader();
               reader.onload = function() {
                 imageData = reader.result;
-                // Now send everything
                 sendToBackend(message, ip, userAgent, timestamp, imageData, audioData);
               };
               reader.readAsDataURL(imageUpload.files[0]);
             } else {
-              // No image, send without it
               sendToBackend(message, ip, userAgent, timestamp, null, audioData);
             }
           })
@@ -447,7 +446,7 @@
           });
       });
 
-      // === Function to send data to backend ===
+      // Function to send data to backend
       function sendToBackend(message, ip, userAgent, timestamp, imageData, audioData) {
         statusDiv.textContent = '✧ Your message is ascending... ✧';
 
