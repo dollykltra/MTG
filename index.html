@@ -388,7 +388,7 @@
             const audioBlob = new Blob(audioChunks, { type: 'audio/webm' });
             const reader = new FileReader();
             reader.onload = function() {
-              window._audioData = reader.result;
+              window._audioData = reader.result; // This is the Base64 data URL
               audioStatus.textContent = '✓ Recording saved!';
               recordBtn.textContent = '🎙️ Record Again';
               recordBtn.classList.remove('recording');
@@ -442,7 +442,7 @@
           params.append('userAgent', userAgent);
           params.append('timestamp', timestamp);
 
-          // Handle image: convert to base64 data URL
+          // Handle image: convert to Base64 data URL
           if (imageUpload.files.length > 0) {
             const file = imageUpload.files[0];
             const reader = new FileReader();
@@ -454,7 +454,7 @@
             params.append('imageData', imageData);
           }
 
-          // Handle audio: use stored base64 data
+          // Handle audio: use stored Base64 data
           if (window._audioData) {
             params.append('audioData', window._audioData);
           }
